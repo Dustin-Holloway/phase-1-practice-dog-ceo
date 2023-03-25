@@ -1,26 +1,43 @@
-document.addEventListener("DOMContentLoaded", getDogs);
-// ducument.addEventListener("DOMContentLoaded", allDogs);
+//DOM selectors
+
+const dropDownSelector = document.querySelector("#breed-dropdown");
+const ulist = document.querySelector("#dog-breeds");
+let filteredDogArray = [];
+console.log(filteredDogArray);
+//Eventlisteners
+
+dropDownSelector.addEventListener("change", (e) => {
+  const letter = e.target.value;
+  selectBreedsStartingWith(letter);
+});
+
+function selectBreedsStartingWith(letter) {
+  console.log("letter:", letter);
+
+  const filteredBreeds = filteredDogArray.filter((breed) =>
+    breed.startsWith(letter)
+  );
+  ulist.innerHTML = "";
+
+  filteredBreeds.forEach(addDogs);
+}
+
+//Global
 
 const addPhotos = (item) => {
   const main = document.querySelector("#dog-image-container");
-
   const img = document.createElement("img");
   img.src = item;
   main.appendChild(img);
 };
 
 const addDogs = (item) => {
+  const dropDownSelector = document.querySelector("#breed-dropdown");
   const ulist = document.querySelector("#dog-breeds");
   const list = document.createElement("li");
-  const typeCheck = item;
-  console.log(typeCheck);
+  ulist.innerHTML = " ";
+  list.innerHtml = "";
   list.innerText = item;
-
-  //   const selection = document.querySelector("#breed-dropdown");
-  //   addEventListener("change", (e) => {
-  //     const aFiltered = console.log("hey");
-  //   });
-
   ulist.appendChild(list);
 
   list.addEventListener("click", function () {
@@ -40,14 +57,20 @@ function getDogs() {
       //   console.log(photos.message);
       photos["message"].forEach(addPhotos);
     });
+}
 
+function getBreeds() {
   fetch("https://dog.ceo/api/breeds/list/all")
     .then((r) => r.json())
     .then((dogs) => {
       //   console.log(dogs.message);
 
-      let arrayOfDogs = Object.keys(dogs.message);
+      const arrayOfDogs = Object.keys(dogs.message);
       arrayOfDogs.forEach(addDogs);
-      console.log(arrayOfDogs);
+      filteredDogArray = arrayOfDogs;
+      // console.log(arrayOfDogs);
     });
 }
+
+getDogs();
+getBreeds();
